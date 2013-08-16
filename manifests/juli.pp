@@ -14,13 +14,14 @@ any sense to include it directly.
 */
 class tomcat::juli {
 
-  include tomcat::params
-
-  if ( ! $tomcat_home ) {
+  if ( $tomcat_home ) {
+  } elsif (  $::tomcat::source::tomcat_home ) {
+    $tomcat_home = $::tomcat::source::tomcat_home
+  } else {
     err('undefined mandatory attribute: $tomcat_home')
   }
 
-  $baseurl = "${tomcat::params::mirror}/tomcat-6/v${tomcat::params::version}/bin"
+  $baseurl = "${tomcat::source::mirror}/tomcat-6/v${tomcat::source::version}/bin"
 
   file { "${tomcat_home}/extras/":
     ensure  => directory,
@@ -28,6 +29,7 @@ class tomcat::juli {
   }
 
   archive::download { "tomcat-juli.jar":
+    checksum    => false,
     url         => "${baseurl}/extras/tomcat-juli.jar",
     digest_url  => "${baseurl}/extras/tomcat-juli.jar.md5",
     digest_type => "md5",
@@ -36,6 +38,7 @@ class tomcat::juli {
   }
 
   archive::download { "tomcat-juli-adapters.jar":
+    checksum    => false,
     url         => "${baseurl}/extras/tomcat-juli-adapters.jar",
     digest_url  => "${baseurl}/extras/tomcat-juli-adapters.jar.md5",
     digest_type => "md5",

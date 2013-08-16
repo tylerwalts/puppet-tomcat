@@ -13,15 +13,17 @@ any sense to include it directly.
 */
 class tomcat::logging {
 
-  include tomcat::params
 
-  if ( ! $tomcat_home ) {
+  if ( $tomcat_home ) {
+  } elsif (  $::tomcat::source::tomcat_home ) {
+    $tomcat_home = $::tomcat::source::tomcat_home
+  } else {
     err('undefined mandatory attribute: $tomcat_home')
   }
 
   file {'commons-logging.jar':
     ensure => link,
-    path   => $tomcat::params::maj_version ? {
+    path   => $tomcat::source::maj_version ? {
       '5.5' => "${tomcat_home}/common/lib/commons-logging.jar",
       '6'   => "${tomcat_home}/lib/commons-logging.jar",
     },
@@ -30,7 +32,7 @@ class tomcat::logging {
 
   file {'log4j.jar':
     ensure => link,
-    path   => $tomcat::params::maj_version ? {
+    path   => $tomcat::source::maj_version ? {
       '5.5' => "${tomcat_home}/common/lib/log4j.jar",
       '6'   => "${tomcat_home}/lib/log4j.jar",
     },
@@ -41,7 +43,7 @@ class tomcat::logging {
   }
 
   file {'log4j.properties':
-    path   => $tomcat::params::maj_version ? {
+    path   => $tomcat::source::maj_version ? {
       '5.5' =>  "${tomcat_home}/common/lib/log4j.properties",
       '6'   =>  "${tomcat_home}/lib/log4j.properties",
     },
