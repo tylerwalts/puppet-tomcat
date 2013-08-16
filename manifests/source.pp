@@ -25,7 +25,8 @@ Usage:
 */
 class tomcat::source (
     $version = "6.0.26",
-    $mirror = "http://archive.apache.org/dist/tomcat/"
+    $mirror = "http://archive.apache.org/dist/tomcat/",
+    $instance_basedir = "/srv/tomcat"
     ) inherits tomcat::base {
 
     $tomcat_home = "/opt/apache-tomcat-$version"

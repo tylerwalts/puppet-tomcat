@@ -66,15 +66,13 @@ define tomcat::connector(
   $manage             = false,
   ) {
 
-  include tomcat::params
-
   if $owner == 'tomcat' {
     $filemode = 0460
   } else {
     $filemode = 0664
   }
 
-  file {"${tomcat::params::instance_basedir}/${instance}/conf/connector-${name}.xml":
+  file {"${tomcat::source::instance_basedir}/${instance}/conf/connector-${name}.xml":
     ensure  => $ensure,
     owner   => $owner,
     group   => $group,
