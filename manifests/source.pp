@@ -33,7 +33,8 @@ Usage:
 class tomcat::source (
     $version = "6.0.26",
     $mirror = "http://archive.apache.org/dist/tomcat/",
-    $instance_basedir = "/srv/tomcat"
+    $instance_basedir = "/srv/tomcat",
+    $commons_package_name = "jakarta"
     ) inherits tomcat::base {
 
     $tomcat_home = "/opt/apache-tomcat-$version"
@@ -64,13 +65,7 @@ class tomcat::source (
 
     case $::osfamily {
         RedHat: {
-            #Detect for bamboo case
-            if ( $ec2_security_groups == "elasticbamboo" ) {
-                $apache_commons_package = "apache"
-            }else{
-                $apache_commons_package = "jakarta"
-            }
-            package { ["log4j", "${apache_commons_package}-commons-logging"]:
+            package { ["log4j", "${commons_package_name}-commons-logging"]:
                 ensure => present,
             }
         } Debian: {
