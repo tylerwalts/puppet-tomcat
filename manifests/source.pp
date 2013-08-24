@@ -62,7 +62,13 @@ class tomcat::source (
 
     case $::osfamily {
         RedHat: {
-            package { ['log4j', 'jakarta-commons-logging']:
+            #Detect for bamboo case
+            if ( $ec2_security_groups == "elasticbamboo" ) {
+                $apache_commons_package = "apache"
+            }else{
+                $apache_commons_package = "jakarta"
+            }
+            package { ["log4j", "${apache_commons_package}-commons-logging"]:
                 ensure => present,
             }
         } Debian: {
