@@ -19,8 +19,15 @@ Tested on:
 - Ubuntu Lucid
 
 Usage:
-  $tomcat_version = "6.0.18"
-  include tomcat::source
+  include 'tomcat::source'
+
+  or
+
+  class { 'tomcat::source':
+      version          => "6.0.26",
+      mirror           => "http://archive.apache.org/dist/tomcat/",
+      instance_basedir => "/srv/tomcat",
+  }
 
 */
 class tomcat::source (
@@ -38,8 +45,12 @@ class tomcat::source (
        } /^6/: {
             $maj_version = '6'
             $baseurl = "$mirror/tomcat-6/v$version/bin"
+
             # install extra tomcat juli adapters, used to configure logging.
-            include tomcat::juli
+            class {'tomcat::juli':
+                tomcat_home => $tomcat_home,
+            }
+
        } default: {
         fail('Unsuported version.')
        }

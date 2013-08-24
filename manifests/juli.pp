@@ -12,14 +12,7 @@ This class is just there to avoid code duplication. It probably doesn't make
 any sense to include it directly.
 
 */
-class tomcat::juli {
-
-  if ( $tomcat_home ) {
-  } elsif (  $::tomcat::source::tomcat_home ) {
-    $tomcat_home = $::tomcat::source::tomcat_home
-  } else {
-    err('undefined mandatory attribute: $tomcat_home')
-  }
+class tomcat::juli ( $tomcat_home ) {
 
   $baseurl = "${tomcat::source::mirror}/tomcat-6/v${tomcat::source::version}/bin"
 

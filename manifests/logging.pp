@@ -11,15 +11,7 @@ This class is just there to avoid code duplication. It probably doesn't make
 any sense to include it directly.
 
 */
-class tomcat::logging {
-
-
-  if ( $tomcat_home ) {
-  } elsif (  $::tomcat::source::tomcat_home ) {
-    $tomcat_home = $::tomcat::source::tomcat_home
-  } else {
-    err('undefined mandatory attribute: $tomcat_home')
-  }
+class tomcat::logging ( $tomcat_home ) {
 
   file {'commons-logging.jar':
     ensure => link,
