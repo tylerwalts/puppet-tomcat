@@ -58,7 +58,9 @@ class tomcat::source (
 
     $tomcaturl = "${baseurl}/apache-tomcat-$version.tar.gz"
 
-    include tomcat::logging
+    class { 'tomcat::logging':
+        tomcat_home => $tomcat_home,
+    }
 
     case $::osfamily {
         RedHat: {
