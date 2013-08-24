@@ -15,10 +15,10 @@ Requires:
 
 Tested on:
 - RHEL 5,6
-- Debian Lenny/Squeeze
-- Ubuntu Lucid
+- Amazon Linux
 
 Usage:
+
   include 'tomcat::source'
 
   or
@@ -31,10 +31,10 @@ Usage:
 
 */
 class tomcat::source (
-    $version = "6.0.26",
-    $mirror = "http://archive.apache.org/dist/tomcat/",
-    $instance_basedir = "/srv/tomcat",
-    $commons_package_name = "jakarta"
+    $version = hiera('tomcat::source::version', "6.0.26"),
+    $mirror = hiera('tomcat::source::mirror', "http://archive.apache.org/dist/tomcat/"),
+    $instance_basedir = hiera('tomcat::source::instance_basedir', "/srv/tomcat"),
+    $commons_package_name = hiera('tomcat::source::commons_package_name', "jakarta")
     ) inherits tomcat::base {
 
     $tomcat_home = "/opt/apache-tomcat-$version"
