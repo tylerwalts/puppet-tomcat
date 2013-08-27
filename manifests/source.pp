@@ -65,11 +65,11 @@ class tomcat::source (
 
     case $::osfamily {
         RedHat: {
-            package { ["log4j", "${commons_package_name}-commons-logging"]:
+            package { ["redhat-lsb", "log4j", "${commons_package_name}-commons-logging"]:
                 ensure => present,
             }
         } Debian: {
-            package { ['liblog4j1.2-java', 'libcommons-logging-java']:
+            package { ["lsb-release", 'liblog4j1.2-java', 'libcommons-logging-java']:
                 ensure => present,
             }
         } default: {
