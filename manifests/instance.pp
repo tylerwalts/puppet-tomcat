@@ -114,6 +114,7 @@ define tomcat::instance(
   $seluser         = undef,
   $selrole         = undef,
   $seltype         = undef,
+  $access_log      = false,
   ) {
 
   $tomcat_name = $name
@@ -338,19 +339,19 @@ define tomcat::instance(
         # Tomcat usually write there
         "${basedir}/logs":
           ensure => directory,
-          owner  => 'tomcat',
+          owner  => $owner,
           group  => $group,
           mode   => $logsmode,
           before => Service["tomcat-${name}"];
         "${basedir}/work":
           ensure => directory,
-          owner  => 'tomcat',
+          owner  => $owner,
           group  => $group,
           mode   => '2770',
           before => Service["tomcat-${name}"];
         "${basedir}/temp":
           ensure => directory,
-          owner  => 'tomcat',
+          owner  => $owner,
           group  => $group,
           mode   => '2770',
           before => Service["tomcat-${name}"];
@@ -363,7 +364,7 @@ define tomcat::instance(
         #
         file { "${basedir}/webapps/sample.war":
           ensure  => present,
-          owner   => 'tomcat',
+          owner   => $owner,
           group   => $group,
           mode    => '0460',
           source  => 'puppet:///modules/tomcat/sample.war',
@@ -452,6 +453,15 @@ define tomcat::instance(
     },
     require => [File["/etc/init.d/tomcat-${name}"], $servicerequire],
     pattern => "-Dcatalina.base=${tomcat::source::instance_basedir}/${name}",
+  }
+
+  # Ensure owner of this instance is a member of the tomcat_user group
+  ensure_resource('user', $owner, {'ensure' => 'present' })
+  exec {"add $owner to ${::tomcat::source::tomcat_group}":
+    command => "usermod -a -G ${::tomcat::source::tomcat_group} $owner",
+    path    => ["/bin", "/sbin", "/usr/bin", "/usr/sbin"],
+    unless  => "grep ${::tomcat::source::tomcat_group} /etc/group | grep $owner",
+    require => Group["${::tomcat::source::tomcat_group}"],
   }
 
   # Logrotate

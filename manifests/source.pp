@@ -3,7 +3,7 @@
 == Class: tomcat::source
 
 Installs tomcat 5.5.X or 6.0.X using the compressed archive from your favorite tomcat
-mirror. Files from the archive will be installed in /opt/apache-tomcat/.
+mirror. Files from the archive will be installed in /opt/apache-tomcat/ by default.
 
 Class variables:
 - *$log4j_conffile*: see tomcat
@@ -34,10 +34,24 @@ class tomcat::source (
     $version = hiera('tomcat::source::version', "6.0.26"),
     $mirror = hiera('tomcat::source::mirror', "http://archive.apache.org/dist/tomcat/"),
     $instance_basedir = hiera('tomcat::source::instance_basedir', "/srv/tomcat"),
-    $commons_package_name = hiera('tomcat::source::commons_package_name', "jakarta")
-    ) inherits tomcat::base {
+    $commons_package_name = hiera('tomcat::source::commons_package_name', "jakarta"),
+    $install_root = hiera('tomcat::source::install_root', "/opt"),
+    $tomcat_group = hiera('tomcat::source::tomcat_group', "tomcat_group")
+    ) {
 
-    $tomcat_home = "/opt/apache-tomcat-$version"
+    $tomcat_home = "$install_root/apache-tomcat-$version"
+
+    group { "$tomcat_group":
+        ensure => present,
+    }
+
+    file { '/var/log/tomcat':
+        ensure => directory,
+        owner  => 'root',
+        group  => $tomat_group,
+        mode   => 0775,
+    }
+
     # Determine major version by first char of version string.
     case $version {
        /^5.5/: {
@@ -82,10 +96,10 @@ class tomcat::source (
         url         => $tomcaturl,
         digest_url  => "${tomcaturl}.md5",
         digest_type => 'md5',
-        target      => '/opt',
+        target      => "$install_root",
     }
 
-    file { '/opt/apache-tomcat':
+    file { "$install_root/apache-tomcat":
         ensure  => link,
         target  => $tomcat_home,
         require => Archive["apache-tomcat-$version"],
@@ -98,7 +112,10 @@ class tomcat::source (
 
     file { $tomcat_home:
         ensure  => directory,
+        group   => $tomcat_group,
         require => Archive["apache-tomcat-$version"],
     }
+
+
 
 }
