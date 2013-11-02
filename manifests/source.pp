@@ -48,7 +48,7 @@ class tomcat::source (
     file { '/var/log/tomcat':
         ensure => directory,
         owner  => 'root',
-        group  => $tomat_group,
+        group  => "$tomcat_group",
         mode   => 0775,
     }
 
