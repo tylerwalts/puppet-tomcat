@@ -28,7 +28,7 @@ Parameters:
     care if it's running or not. Useful if tomcat is managed by heartbeat.
   - absent: tomcat instance will be stopped, disabled and completely removed
     from the system. Warning: /srv/tomcat/$name/ will be completely erased !
-- *owner": the owner of $CATALINA_BASE/{conf,webapps}. Defaults to "tomcat".
+- *owner*: the owner of $CATALINA_BASE/{conf,webapps}. Defaults to "tomcat".
   Note that permissions will be different, as tomcat needs to read these
   directories in any case.
 - *group*: the group which will be allowed to edit the instance's configuration
@@ -457,7 +457,7 @@ define tomcat::instance(
 
   # Ensure owner of this instance is a member of the tomcat_user group
   ensure_resource('user', $owner, {'ensure' => 'present' })
-  exec {"add $owner to ${::tomcat::source::tomcat_group}":
+  exec {"${name} add ${owner} to ${::tomcat::source::tomcat_group}":
     command => "usermod -a -G ${::tomcat::source::tomcat_group} $owner",
     path    => ["/bin", "/sbin", "/usr/bin", "/usr/sbin"],
     unless  => "grep ${::tomcat::source::tomcat_group} /etc/group | grep $owner",
