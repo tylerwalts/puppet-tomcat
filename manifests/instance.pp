@@ -456,11 +456,12 @@ define tomcat::instance(
   }
 
   # Ensure owner of this instance is a member of the tomcat_user group
-  ensure_resource('user', $owner, {'ensure' => 'present' })
+  ensure_resource('user', $owner, { 'ensure' => 'present' })
   exec {"${name} add ${owner} to ${::tomcat::source::tomcat_group}":
-    command => "usermod -a -G ${::tomcat::source::tomcat_group} $owner",
+    command => "usermod -a -G ${::tomcat::source::tomcat_group} ${owner}",
     path    => ["/bin", "/sbin", "/usr/bin", "/usr/sbin"],
-    unless  => "grep ${::tomcat::source::tomcat_group} /etc/group | grep $owner",
+    onlyif  => "id $owner &>/dev/null",
+    unless  => "grep ${::tomcat::source::tomcat_group} /etc/group | grep ${owner}",
     require => Group["${::tomcat::source::tomcat_group}"],
   }
 
