@@ -182,3 +182,7 @@ tomcat-instance:
       manage    => true,
       connector => ["http-8080","ajp-8081"],
     }
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/tylerwalts/puppet-tomcat/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
