@@ -18,6 +18,7 @@ class tomcat::logging ( $tomcat_home ) {
     path   => $tomcat::source::maj_version ? {
       '5.5' => "${tomcat_home}/common/lib/commons-logging.jar",
       '6'   => "${tomcat_home}/lib/commons-logging.jar",
+      '7'   => "${tomcat_home}/lib/commons-logging.jar",
     },
     target => '/usr/share/java/commons-logging.jar',
   }
@@ -27,6 +28,7 @@ class tomcat::logging ( $tomcat_home ) {
     path   => $tomcat::source::maj_version ? {
       '5.5' => "${tomcat_home}/common/lib/log4j.jar",
       '6'   => "${tomcat_home}/lib/log4j.jar",
+      '7'   => "${tomcat_home}/lib/log4j.jar",
     },
     target => $::osfamily ? {
       Debian => '/usr/share/java/log4j-1.2.jar',
@@ -38,6 +40,7 @@ class tomcat::logging ( $tomcat_home ) {
     path   => $tomcat::source::maj_version ? {
       '5.5' =>  "${tomcat_home}/common/lib/log4j.properties",
       '6'   =>  "${tomcat_home}/lib/log4j.properties",
+      '7'   =>  "${tomcat_home}/lib/log4j.properties",
     },
     source => $log4j_conffile ? {
       default => $log4j_conffile,
