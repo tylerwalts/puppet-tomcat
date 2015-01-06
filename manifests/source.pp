@@ -2,7 +2,7 @@
 
 == Class: tomcat::source
 
-Installs tomcat 5.5.X or 6.0.X using the compressed archive from your favorite tomcat
+Installs tomcat 5.5.X, 6.0.X, 7.0.x  using the compressed archive from your favorite tomcat
 mirror. Files from the archive will be installed in /opt/apache-tomcat/ by default.
 
 Class variables:
@@ -60,15 +60,19 @@ class tomcat::source (
        } /^6/: {
             $maj_version = '6'
             $baseurl = "$mirror/tomcat-6/v$version/bin"
-
-            # install extra tomcat juli adapters, used to configure logging.
-            class {'tomcat::juli':
-                tomcat_home => $tomcat_home,
-            }
-
+       } /^7/: {
+            $maj_version = '7'
+            $baseurl = "$mirror/tomcat-7/v$version/bin"
        } default: {
         fail('Unsuported version.')
        }
+    }
+
+    if $maj_version != '5.5' {
+        # install extra tomcat juli adapters, used to configure logging.
+        class {'tomcat::juli':
+            tomcat_home => $tomcat_home,
+        }
     }
 
     $tomcaturl = "${baseurl}/apache-tomcat-$version.tar.gz"

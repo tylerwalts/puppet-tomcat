@@ -14,7 +14,7 @@ any sense to include it directly.
 */
 class tomcat::juli ( $tomcat_home ) {
 
-  $baseurl = "${tomcat::source::mirror}/tomcat-6/v${tomcat::source::version}/bin"
+  $baseurl = "${tomcat::source::mirror}/tomcat-${tomcat::source::maj_version}/v${tomcat::source::version}/bin"
 
   file { "${tomcat_home}/extras/":
     ensure  => directory,

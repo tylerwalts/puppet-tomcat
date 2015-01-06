@@ -204,6 +204,10 @@ define tomcat::instance(
     $serverdotxml = 'server.xml.tomcat6.erb'
   }
 
+  if $tomcat::source::maj_version == '7' {
+    $serverdotxml = 'server.xml.tomcat7.erb'
+  }
+
   # Assume always using source
   $catalinahome = '/opt/apache-tomcat'
 
