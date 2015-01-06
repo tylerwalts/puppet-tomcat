@@ -115,6 +115,7 @@ define tomcat::instance(
   $selrole         = undef,
   $seltype         = undef,
   $access_log      = false,
+  $catalina_logrotate = false
   ) {
 
   $tomcat_name = $name
@@ -144,7 +145,16 @@ define tomcat::instance(
     $confmode = $conf_mode ? {
       ''      => $dirmode,
       default => $conf_mode
+    }# Default rotation of catalina.out
+  # Not managed by default
+  # TODO: managed mode with more options ?
+  if $catalina_logrotate {
+    file{ "/etc/logrotate.d/catalina-${name}":
+      ensure  => $present,
+      replace => false,
+      content => template( 'tomcat/logrotate.catalina.erb' ),
     }
+
     $logsmode = $logs_mode ? {
       ''      => '2770',
       default => $logs_mode
@@ -469,9 +479,18 @@ define tomcat::instance(
     require => Group["${::tomcat::source::tomcat_group}"],
   }
 
-  # Logrotate
-  file {"/etc/logrotate.d/tomcat-${name}.conf":
-    ensure => absent,
+  # Default rotation of catalina.out
+  # Not managed by default
+  if $catalina_logrotate {
+    file{ "/etc/logrotate.d/catalina-${name}":
+      ensure  => $present,
+      replace => false,
+      content => template( 'tomcat/logrotate.catalina.erb' ),
+  } else {
+    # Logrotate
+    file { "/etc/logrotate.d/tomcat-${name}.conf":
+      ensure => absent,
+    }
   }
 
 }
