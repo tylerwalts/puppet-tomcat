@@ -1,0 +1,11 @@
+# file installed but NOT managed by Puppet
+<%= @basedir %>/logs/catalina.out {
+copytruncate
+size 500M
+dateext
+rotate <%= @catalina_logrotate_archive_count  %>
+compress
+delaycompress
+missingok
+create 644 tomcat tomcat-admin
+}
