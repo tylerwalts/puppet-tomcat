@@ -115,7 +115,8 @@ define tomcat::instance(
   $selrole         = undef,
   $seltype         = undef,
   $access_log      = false,
-  $catalina_logrotate = false
+  $catalina_logrotate = false,
+  $catalina_logrotate_archive_count = 5
   ) {
 
   $tomcat_name = $name

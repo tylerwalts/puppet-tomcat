@@ -3,7 +3,7 @@
 copytruncate
 size 500M
 dateext
-rotate 53
+rotate <%= @catalina_logrotate_archive_count  %>
 compress
 delaycompress
 missingok
